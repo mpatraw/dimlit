@@ -57,10 +57,23 @@ void GameScene::draw()
     }
 
     mStatusBar.draw();
+
+    if (mDialog) {
+        mDialog->draw();
+    }
 }
 
 void GameScene::process(Action action)
 {
+    if (mDialog) {
+        if (!mDialog->shouldClose()) {
+            mDialog->process(action);
+            return;
+        } else {
+            mDialog.reset();
+        }
+    }
+
     bool moved = false;
 
     switch (action) {

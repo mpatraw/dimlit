@@ -4,9 +4,10 @@
 
 #include "action.hpp"
 #include "colored_light_matrix.hpp"
-#include "rogue.hpp"
 #include "creature.hpp"
 #include "crystalline_structure.hpp"
+#include "dialog.hpp"
+#include "rogue.hpp"
 #include "scene.hpp"
 #include "status_bar.hpp"
 
@@ -28,6 +29,7 @@ private:
     std::shared_ptr<Rogue> mTheRogue;
     std::shared_ptr<Creature> mTheCreature;
     std::vector<std::shared_ptr<CrystallineStructure>> mCrystallineStructures;
+    std::unique_ptr<Dialog> mDialog;
     StatusBar mStatusBar;
 };
 

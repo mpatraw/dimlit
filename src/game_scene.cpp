@@ -74,25 +74,30 @@ void GameScene::process(Action action)
         }
     }
 
-    bool moved = false;
-
+    int dX = 0;
+    int dY = 0;
     switch (action) {
     case Action::kMoveNorth:
-        moved = mTheRogue->moveBy(0, -1);
+        dY = -1;
         break;
     case Action::kMoveSouth:
-        moved = mTheRogue->moveBy(0, 1);
+        dY = 1;
         break;
     case Action::kMoveEast:
-        moved = mTheRogue->moveBy(1, 0);
+        dX = 1;
         break;
     case Action::kMoveWest:
-        moved = mTheRogue->moveBy(-1, 0);
+        dX = -1;
         break;
     default:
         break;
     }
 
+    if (dX == 0 && dY == 0) {
+        return;
+    }
+
+    bool moved = mTheRogue->moveBy(dX, dY);
     if (moved) {
         step();
     }

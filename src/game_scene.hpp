@@ -14,13 +14,13 @@
 const int kSceneWidth = 80;
 const int kSceneHeight = 23;
 
-class GameScene : public Scene
+class GameScene
 {
 public:
     GameScene();
 
-    void step() override;
-    void draw() override;
+    void step();
+    void draw();
 
     void process(Action action);
 

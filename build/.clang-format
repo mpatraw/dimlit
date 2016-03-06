@@ -1,0 +1,18 @@
+AccessModifierOffset: -4
+AlignAfterOpenBracket: true
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: false
+BasedOnStyle: LLVM
+# 3.9 feature
+#BracketAlignmentStyle: DontAlign
+BreakBeforeBraces: Linux
+ColumnLimit: 80
+ConstructorInitializerIndentWidth: 4
+ContinuationIndentWidth: 4
+IndentCaseLabels: false
+IndentWidth: 4
+MaxEmptyLinesToKeep: 1
+# 3.9 feature
+#SortIncludes: true
+TabWidth: 4
+UseTab: Never

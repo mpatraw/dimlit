@@ -26,3 +26,13 @@
 *.exe
 *.out
 *.app
+
+# Fuck Mac
+.DS_Store
+
+# Premake5
+build/bin
+build/obj
+
+# Binaries
+bin/

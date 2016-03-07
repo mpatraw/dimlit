@@ -21,10 +21,10 @@ ifeq ($(config),debug)
     AR = ar
   endif
   TARGETDIR = bin/Debug
-  TARGET = $(TARGETDIR)/libentityx.a
-  OBJDIR = obj/Debug/entityx
+  TARGET = $(TARGETDIR)/libanax.a
+  OBJDIR = obj/Debug/anax
   DEFINES += -DDEBUG
-  INCLUDES += -I../vendor/entityx
+  INCLUDES += -I../vendor/anax/include
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -Werror -std=c++14 -Wall -Wextra -Wpedantic -Wno-unused-parameter -Wno-error=unused-variable -Wno-error=sign-compare
@@ -36,7 +36,7 @@ ifeq ($(config),debug)
   LINKCMD = $(AR) -rcs "$@" $(OBJECTS)
   define PREBUILDCMDS
 	@echo Running prebuild commands
-	if [ ! -f ../vendor/entityx/entityx/config.h ]; then cp config.h ../vendor/entityx/entityx/config.h; fi
+	if [ ! -f ../vendor/anax/include/anax/Config.hpp ]; then cp AnaxConfig.hpp ../vendor/anax/include/anax/Config.hpp; fi
   endef
   define PRELINKCMDS
   endef
@@ -58,10 +58,10 @@ ifeq ($(config),release)
     AR = ar
   endif
   TARGETDIR = bin/Release
-  TARGET = $(TARGETDIR)/libentityx.a
-  OBJDIR = obj/Release/entityx
+  TARGET = $(TARGETDIR)/libanax.a
+  OBJDIR = obj/Release/anax
   DEFINES += -DNDEBUG
-  INCLUDES += -I../vendor/entityx
+  INCLUDES += -I../vendor/anax/include
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++14 -Wno-unused-parameter -Wno-error=unused-variable -Wno-error=sign-compare
@@ -73,7 +73,7 @@ ifeq ($(config),release)
   LINKCMD = $(AR) -rcs "$@" $(OBJECTS)
   define PREBUILDCMDS
 	@echo Running prebuild commands
-	if [ ! -f ../vendor/entityx/entityx/config.h ]; then cp config.h ../vendor/entityx/entityx/config.h; fi
+	if [ ! -f ../vendor/anax/include/anax/Config.hpp ]; then cp AnaxConfig.hpp ../vendor/anax/include/anax/Config.hpp; fi
   endef
   define PRELINKCMDS
   endef
@@ -86,13 +86,11 @@ endif
 
 OBJECTS := \
 	$(OBJDIR)/Entity.o \
-	$(OBJDIR)/Event.o \
-	$(OBJDIR)/System.o \
-	$(OBJDIR)/Dependencies_test.o \
-	$(OBJDIR)/Pool.o \
-	$(OBJDIR)/Pool_test.o \
-	$(OBJDIR)/Timer.o \
-	$(OBJDIR)/TagsComponent_test.o \
+	$(OBJDIR)/World.o \
+	$(OBJDIR)/BaseSystem.o \
+	$(OBJDIR)/EntityComponentStorage.o \
+	$(OBJDIR)/EntityIdPool.o \
+	$(OBJDIR)/Filter.o \
 
 RESOURCES := \
 
@@ -107,7 +105,7 @@ ifeq (/bin,$(findstring /bin,$(SHELL)))
 endif
 
 $(TARGET): $(GCH) ${CUSTOMFILES} $(OBJECTS) $(LDDEPS) $(RESOURCES)
-	@echo Linking entityx
+	@echo Linking anax
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
 
@@ -128,7 +126,7 @@ else
 endif
 
 clean:
-	@echo Cleaning entityx
+	@echo Cleaning anax
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -f  $(TARGET)
 	$(SILENT) rm -rf $(OBJDIR)
@@ -150,28 +148,22 @@ $(GCH): $(PCH)
 	$(SILENT) $(CXX) -x c++-header $(ALL_CXXFLAGS) -o "$@" -MF "$(@:%.gch=%.d)" -c "$<"
 endif
 
-$(OBJDIR)/Entity.o: ../vendor/entityx/entityx/Entity.cc
+$(OBJDIR)/Entity.o: ../vendor/anax/src/anax/Entity.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Event.o: ../vendor/entityx/entityx/Event.cc
+$(OBJDIR)/World.o: ../vendor/anax/src/anax/World.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/System.o: ../vendor/entityx/entityx/System.cc
+$(OBJDIR)/BaseSystem.o: ../vendor/anax/src/anax/detail/BaseSystem.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Dependencies_test.o: ../vendor/entityx/entityx/deps/Dependencies_test.cc
+$(OBJDIR)/EntityComponentStorage.o: ../vendor/anax/src/anax/detail/EntityComponentStorage.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Pool.o: ../vendor/entityx/entityx/help/Pool.cc
+$(OBJDIR)/EntityIdPool.o: ../vendor/anax/src/anax/detail/EntityIdPool.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Pool_test.o: ../vendor/entityx/entityx/help/Pool_test.cc
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Timer.o: ../vendor/entityx/entityx/help/Timer.cc
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/TagsComponent_test.o: ../vendor/entityx/entityx/tags/TagsComponent_test.cc
+$(OBJDIR)/Filter.o: ../vendor/anax/src/anax/detail/Filter.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

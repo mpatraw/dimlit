@@ -24,14 +24,14 @@ ifeq ($(config),debug)
   TARGET = $(TARGETDIR)/dimlit
   OBJDIR = obj/Debug/dimlit
   DEFINES += -DDEBUG
-  INCLUDES += -I/usr/local/include
+  INCLUDES += -I/usr/local/include -I../vendor/anax/include
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -Werror -std=c++14 -Wall -Wextra -Wpedantic
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += bin/Debug/libdimlit-lib.a bin/Debug/libentityx.a -ltermbox
-  LDDEPS += bin/Debug/libdimlit-lib.a bin/Debug/libentityx.a
+  LIBS += bin/Debug/libdimlit-lib.a bin/Debug/libanax.a -ltermbox
+  LDDEPS += bin/Debug/libdimlit-lib.a bin/Debug/libanax.a
   ALL_LDFLAGS += $(LDFLAGS) -L/usr/local/lib
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
@@ -59,14 +59,14 @@ ifeq ($(config),release)
   TARGET = $(TARGETDIR)/dimlit
   OBJDIR = obj/Release/dimlit
   DEFINES += -DNDEBUG
-  INCLUDES += -I/usr/local/include
+  INCLUDES += -I/usr/local/include -I../vendor/anax/include
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++14
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += bin/Release/libdimlit-lib.a bin/Release/libentityx.a -ltermbox
-  LDDEPS += bin/Release/libdimlit-lib.a bin/Release/libentityx.a
+  LIBS += bin/Release/libdimlit-lib.a bin/Release/libanax.a -ltermbox
+  LDDEPS += bin/Release/libdimlit-lib.a bin/Release/libanax.a
   ALL_LDFLAGS += $(LDFLAGS) -L/usr/local/lib
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS

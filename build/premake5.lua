@@ -25,25 +25,20 @@ project "dimlit-lib"
     removefiles "../src/main.cpp"
     includedirs {"/usr/local/include"}
 
-project "entityx"
-    prebuildcommands { "if [ ! -f ../vendor/entityx/entityx/config.h ]; then cp config.h ../vendor/entityx/entityx/config.h; fi" }
+project "anax"
+    prebuildcommands { "if [ ! -f ../vendor/anax/include/anax/Config.hpp ]; then cp AnaxConfig.hpp ../vendor/anax/include/anax/Config.hpp; fi" }
     kind "StaticLib"
-    files {
-        "../vendor/entityx/entityx/*.cc",
-        "../vendor/entityx/entityx/deps/*.cc",
-        "../vendor/entityx/entityx/help/*.cc",
-        "../vendor/entityx/entityx/tags/*.cc",
-    }
-    removefiles "../vendor/entityx/entityx/*_test.cc"
-    includedirs {"../vendor/entityx"}
+    files {"../vendor/anax/src/anax/**.cpp"}
+    includedirs {"../vendor/anax/include"}
     buildoptions {"-Wno-unused-parameter", "-Wno-error=unused-variable", "-Wno-error=sign-compare"}
+
 
 project "dimlit"
     kind "ConsoleApp"
     files "../src/main.cpp"
-    includedirs {"/usr/local/include"}
+    includedirs {"/usr/local/include", "../vendor/anax/include"}
     libdirs {"/usr/local/lib"}
-    links {"dimlit-lib", "termbox", "entityx"}
+    links {"dimlit-lib", "termbox", "anax"}
     targetdir "../bin"
 
 

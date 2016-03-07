@@ -12,14 +12,16 @@ endif
 
 ifeq ($(config),debug)
   dimlit_lib_config = debug
+  entityx_config = debug
   dimlit_config = debug
 endif
 ifeq ($(config),release)
   dimlit_lib_config = release
+  entityx_config = release
   dimlit_config = release
 endif
 
-PROJECTS := dimlit-lib dimlit
+PROJECTS := dimlit-lib entityx dimlit
 
 .PHONY: all clean help $(PROJECTS) 
 
@@ -31,7 +33,13 @@ ifneq (,$(dimlit_lib_config))
 	@${MAKE} --no-print-directory -C . -f dimlit-lib.make config=$(dimlit_lib_config)
 endif
 
-dimlit: dimlit-lib
+entityx:
+ifneq (,$(entityx_config))
+	@echo "==== Building entityx ($(entityx_config)) ===="
+	@${MAKE} --no-print-directory -C . -f entityx.make config=$(entityx_config)
+endif
+
+dimlit: dimlit-lib entityx
 ifneq (,$(dimlit_config))
 	@echo "==== Building dimlit ($(dimlit_config)) ===="
 	@${MAKE} --no-print-directory -C . -f dimlit.make config=$(dimlit_config)
@@ -39,6 +47,7 @@ endif
 
 clean:
 	@${MAKE} --no-print-directory -C . -f dimlit-lib.make clean
+	@${MAKE} --no-print-directory -C . -f entityx.make clean
 	@${MAKE} --no-print-directory -C . -f dimlit.make clean
 
 help:
@@ -52,6 +61,7 @@ help:
 	@echo "   all (default)"
 	@echo "   clean"
 	@echo "   dimlit-lib"
+	@echo "   entityx"
 	@echo "   dimlit"
 	@echo ""
 	@echo "For more information, see http://industriousone.com/premake/quick-start"

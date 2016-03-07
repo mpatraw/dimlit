@@ -20,21 +20,23 @@ ifeq ($(config),debug)
   ifeq ($(origin AR), default)
     AR = ar
   endif
-  TARGETDIR = ../bin
-  TARGET = $(TARGETDIR)/dimlit
-  OBJDIR = obj/Debug/dimlit
+  TARGETDIR = bin/Debug
+  TARGET = $(TARGETDIR)/libentityx.a
+  OBJDIR = obj/Debug/entityx
   DEFINES += -DDEBUG
-  INCLUDES += -I/usr/local/include
+  INCLUDES += -I../vendor/entityx
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -Werror -std=c++14 -Wall -Wextra -Wpedantic
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -Werror -std=c++14 -Wall -Wextra -Wpedantic -Wno-unused-parameter -Wno-error=unused-variable -Wno-error=sign-compare
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += bin/Debug/libdimlit-lib.a bin/Debug/libentityx.a -ltermbox
-  LDDEPS += bin/Debug/libdimlit-lib.a bin/Debug/libentityx.a
-  ALL_LDFLAGS += $(LDFLAGS) -L/usr/local/lib
-  LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
+  LIBS +=
+  LDDEPS +=
+  ALL_LDFLAGS += $(LDFLAGS)
+  LINKCMD = $(AR) -rcs "$@" $(OBJECTS)
   define PREBUILDCMDS
+	@echo Running prebuild commands
+	if [ ! -f ../vendor/entityx/entityx/config.h ]; then cp config.h ../vendor/entityx/entityx/config.h; fi
   endef
   define PRELINKCMDS
   endef
@@ -55,21 +57,23 @@ ifeq ($(config),release)
   ifeq ($(origin AR), default)
     AR = ar
   endif
-  TARGETDIR = ../bin
-  TARGET = $(TARGETDIR)/dimlit
-  OBJDIR = obj/Release/dimlit
+  TARGETDIR = bin/Release
+  TARGET = $(TARGETDIR)/libentityx.a
+  OBJDIR = obj/Release/entityx
   DEFINES += -DNDEBUG
-  INCLUDES += -I/usr/local/include
+  INCLUDES += -I../vendor/entityx
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++14
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++14 -Wno-unused-parameter -Wno-error=unused-variable -Wno-error=sign-compare
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += bin/Release/libdimlit-lib.a bin/Release/libentityx.a -ltermbox
-  LDDEPS += bin/Release/libdimlit-lib.a bin/Release/libentityx.a
-  ALL_LDFLAGS += $(LDFLAGS) -L/usr/local/lib
-  LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
+  LIBS +=
+  LDDEPS +=
+  ALL_LDFLAGS += $(LDFLAGS)
+  LINKCMD = $(AR) -rcs "$@" $(OBJECTS)
   define PREBUILDCMDS
+	@echo Running prebuild commands
+	if [ ! -f ../vendor/entityx/entityx/config.h ]; then cp config.h ../vendor/entityx/entityx/config.h; fi
   endef
   define PRELINKCMDS
   endef
@@ -81,7 +85,14 @@ all: $(TARGETDIR) $(OBJDIR) prebuild prelink $(TARGET)
 endif
 
 OBJECTS := \
-	$(OBJDIR)/main.o \
+	$(OBJDIR)/Entity.o \
+	$(OBJDIR)/Event.o \
+	$(OBJDIR)/System.o \
+	$(OBJDIR)/Dependencies_test.o \
+	$(OBJDIR)/Pool.o \
+	$(OBJDIR)/Pool_test.o \
+	$(OBJDIR)/Timer.o \
+	$(OBJDIR)/TagsComponent_test.o \
 
 RESOURCES := \
 
@@ -96,7 +107,7 @@ ifeq (/bin,$(findstring /bin,$(SHELL)))
 endif
 
 $(TARGET): $(GCH) ${CUSTOMFILES} $(OBJECTS) $(LDDEPS) $(RESOURCES)
-	@echo Linking dimlit
+	@echo Linking entityx
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
 
@@ -117,7 +128,7 @@ else
 endif
 
 clean:
-	@echo Cleaning dimlit
+	@echo Cleaning entityx
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -f  $(TARGET)
 	$(SILENT) rm -rf $(OBJDIR)
@@ -139,7 +150,28 @@ $(GCH): $(PCH)
 	$(SILENT) $(CXX) -x c++-header $(ALL_CXXFLAGS) -o "$@" -MF "$(@:%.gch=%.d)" -c "$<"
 endif
 
-$(OBJDIR)/main.o: ../src/main.cpp
+$(OBJDIR)/Entity.o: ../vendor/entityx/entityx/Entity.cc
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Event.o: ../vendor/entityx/entityx/Event.cc
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/System.o: ../vendor/entityx/entityx/System.cc
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Dependencies_test.o: ../vendor/entityx/entityx/deps/Dependencies_test.cc
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Pool.o: ../vendor/entityx/entityx/help/Pool.cc
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Pool_test.o: ../vendor/entityx/entityx/help/Pool_test.cc
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Timer.o: ../vendor/entityx/entityx/help/Timer.cc
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/TagsComponent_test.o: ../vendor/entityx/entityx/tags/TagsComponent_test.cc
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

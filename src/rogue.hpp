@@ -36,7 +36,7 @@ public:
         mVisibility.emitLight(mX, mY, 0);
         mX = x;
         mY = y;
-        mVisibility.emitEnough(mX, mY, mSightRange);
+        mVisibility.emitRange(mX, mY, mSightRange);
         mColoredCrystalMatrix.collectCrystals(mX, mY, mColoredCrystalBag);
         return true;
     }

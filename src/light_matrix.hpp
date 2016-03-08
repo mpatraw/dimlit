@@ -15,7 +15,7 @@ public:
     int lightEmitted(int x, int y) const;
 
     void emitLight(int x, int y, int amount);
-    void emitEnough(int x, int y, int range);
+    void emitRange(int x, int y, int range);
 
 private:
     int mWidth;

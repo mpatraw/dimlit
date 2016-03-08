@@ -1,3 +1,4 @@
+#include <sstream>
 
 #include <termbox.h>
 
@@ -7,7 +8,7 @@ World::World()
     : mColoredCrystalMatrix{new ColoredCrystalMatrix(kWorldWidth, kWorldHeight)},
       mColoredLightMatrix{new ColoredLightMatrix(kWorldWidth, kWorldHeight)},
       mTheRogue{new Rogue(mCrystallineStructures, *mColoredLightMatrix, *mColoredCrystalMatrix)},
-      mTheCreature{new Creature}, mStatusBar{23, kWorldWidth, *mTheRogue}
+      mTheCreature{new Creature(*mTheRogue, *mColoredLightMatrix)}, mStatusBar{23, kWorldWidth, *mTheRogue}
 {
     auto eff =
         std::make_shared<LightProvider>(Color::kWhite, *mColoredLightMatrix);
@@ -108,8 +109,23 @@ void World::process(Action action)
             return i->x() == x && i->y() == y;
         });
         if (cs != e) {
+            int currentCrystals = (*cs)->crystals();
+            int maxCrystals = (*cs)->maxCrystals();
+            int maxNeeded = maxCrystals - currentCrystals;
+            std::vector<std::string> options;
+            for (int i = 4; i < maxNeeded; i *= 5) {
+                std::stringstream ss;
+                ss << "Give " << i;
+                options.push_back(ss.str());
+            }
+            std::stringstream maxss;
+            maxss << "Give " << maxNeeded;
+            options.push_back(maxss.str());
+            std::stringstream ss;
+            ss << (*cs)->name() << " (" << currentCrystals << "/" << maxCrystals << ")";
             mDialog.reset(new Dialog(x, y, kWorldWidth, kWorldHeight,
-                (*cs)->name(), {"Give 5", "Give 10"}, [](auto const &option) {}));
+                ss.str(), options, [](auto const &option) {
+                }));
         }
     }
 }

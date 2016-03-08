@@ -107,7 +107,7 @@ skip_removing_light:
     mLightEmitted[y * mWidth + x] = amount;
 }
 
-void LightMatrix::emitEnough(int x, int y, int range)
+void LightMatrix::emitRange(int x, int y, int range)
 {
     emitLight(x, y, find_intensity_for_distance(range));
 }

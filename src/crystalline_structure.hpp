@@ -18,9 +18,9 @@ public:
 
     int x() const;
     int y() const;
+    int crystals() const;
+    int maxCrystals() const;
     Color poweredBy() const;
-    bool fullPowered() const;
-    float precentPowered() const;
     std::string name() const;
 
     int givePower(int amount);
@@ -35,9 +35,9 @@ private:
     int mX = 0;
     int mY = 0;
     int mCrystals = 0;
-    std::string mName;
-    Color mPoweredBy;
     int mMaxCrystals;
+    Color mPoweredBy;
+    std::string mName;
     std::shared_ptr<CrystallineStructureEffect> mEffect;
 };
 

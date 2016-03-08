@@ -4,7 +4,7 @@
 CrystallineStructure::CrystallineStructure(
     std::string name, Color powers, int maxCrystals,
     std::shared_ptr<CrystallineStructureEffect> effect)
-    : mName{name}, mPoweredBy{powers}, mMaxCrystals{maxCrystals}, mEffect{effect}
+    : mMaxCrystals{maxCrystals}, mPoweredBy{powers}, mName{name}, mEffect{effect}
 {
 }
 CrystallineStructure::~CrystallineStructure()
@@ -20,18 +20,19 @@ int CrystallineStructure::y() const
     return mY;
 }
 
+int CrystallineStructure::crystals() const
+{
+    return mCrystals;
+}
+
+int CrystallineStructure::maxCrystals() const
+{
+    return mMaxCrystals;
+}
+
 Color CrystallineStructure::poweredBy() const
 {
     return mPoweredBy;
-}
-
-bool CrystallineStructure::fullPowered() const
-{
-    return mCrystals == mMaxCrystals;
-}
-float CrystallineStructure::precentPowered() const
-{
-    return static_cast<float>(mCrystals) / mMaxCrystals;
 }
 
 std::string CrystallineStructure::name() const

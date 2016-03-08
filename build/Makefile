@@ -12,16 +12,14 @@ endif
 
 ifeq ($(config),debug)
   dimlit_lib_config = debug
-  anax_config = debug
   dimlit_config = debug
 endif
 ifeq ($(config),release)
   dimlit_lib_config = release
-  anax_config = release
   dimlit_config = release
 endif
 
-PROJECTS := dimlit-lib anax dimlit
+PROJECTS := dimlit-lib dimlit
 
 .PHONY: all clean help $(PROJECTS) 
 
@@ -33,13 +31,7 @@ ifneq (,$(dimlit_lib_config))
 	@${MAKE} --no-print-directory -C . -f dimlit-lib.make config=$(dimlit_lib_config)
 endif
 
-anax:
-ifneq (,$(anax_config))
-	@echo "==== Building anax ($(anax_config)) ===="
-	@${MAKE} --no-print-directory -C . -f anax.make config=$(anax_config)
-endif
-
-dimlit: dimlit-lib anax
+dimlit: dimlit-lib
 ifneq (,$(dimlit_config))
 	@echo "==== Building dimlit ($(dimlit_config)) ===="
 	@${MAKE} --no-print-directory -C . -f dimlit.make config=$(dimlit_config)
@@ -47,7 +39,6 @@ endif
 
 clean:
 	@${MAKE} --no-print-directory -C . -f dimlit-lib.make clean
-	@${MAKE} --no-print-directory -C . -f anax.make clean
 	@${MAKE} --no-print-directory -C . -f dimlit.make clean
 
 help:
@@ -61,7 +52,6 @@ help:
 	@echo "   all (default)"
 	@echo "   clean"
 	@echo "   dimlit-lib"
-	@echo "   anax"
 	@echo "   dimlit"
 	@echo ""
 	@echo "For more information, see http://industriousone.com/premake/quick-start"

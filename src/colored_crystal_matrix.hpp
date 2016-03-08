@@ -15,7 +15,9 @@ public:
     {
     public:
         virtual ~Populator() = default;
-        virtual void populate(ColoredCrystalMatrix &crystalMatrix) = 0;
+        virtual void populate(std::vector<Color> &colorMatrix,
+                              std::vector<int> &crystalMatrix,
+                              int width, int height) = 0;
     };
     friend class Populator;
     ColoredCrystalMatrix(int width, int height, Populator *populator)
@@ -29,6 +31,9 @@ public:
         mColorMatrix[y * mWidth + x] = Color::kWhite;
         mCrystalMatrix[y * mWidth + x] = 10;
     }
+
+    int width() const { return mWidth; }
+    int height() const { return mHeight; }
 
     int crystals(int x, int y) const
     {
@@ -52,7 +57,7 @@ public:
         mCrystalMatrix[y * mWidth + x] = 0;
     }
 
-    void step() { mPopulator->populate(*this); }
+    void step() { mPopulator->populate(mColorMatrix, mCrystalMatrix, mWidth, mHeight); }
 
 private:
     int mWidth;

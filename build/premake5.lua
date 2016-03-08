@@ -25,20 +25,12 @@ project "dimlit-lib"
     removefiles "../src/main.cpp"
     includedirs {"/usr/local/include", "../vendor/anax/include"}
 
-project "anax"
-    prebuildcommands { "if [ ! -f ../vendor/anax/include/anax/Config.hpp ]; then cp AnaxConfig.hpp ../vendor/anax/include/anax/Config.hpp; fi" }
-    kind "StaticLib"
-    files {"../vendor/anax/src/anax/**.cpp"}
-    includedirs {"../vendor/anax/include"}
-    buildoptions {"-Wno-error=unused-variable", "-Wno-error=sign-compare"}
-
-
 project "dimlit"
     kind "ConsoleApp"
     files "../src/main.cpp"
     includedirs {"/usr/local/include", "../vendor/anax/include"}
     libdirs {"/usr/local/lib"}
-    links {"dimlit-lib", "termbox", "anax"}
+    links {"dimlit-lib", "termbox"}
     targetdir "../bin"
 
 

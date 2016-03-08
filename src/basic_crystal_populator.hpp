@@ -14,9 +14,24 @@ public:
     }
     ~BasicCrystalPopulator() = default;
 
-    void populate(ColoredCrystalMatrix &crystalMatrix) override
+    void populate(std::vector<Color> &colorMatrix,
+                  std::vector<int> &crystalMatrix,
+                  int width, int height) override
     {
-        (void)mColoredLightMatrix;
+        if (rand() % 100 < 50) {
+            return;
+        }
+
+        int tries = 100;
+        while (--tries) {
+            int x = rand() % width;
+            int y = rand() % height;
+            if (mColoredLightMatrix.brightness(x, y, Color::kWhite) > 0) {
+                continue;
+            }
+            colorMatrix[y * width + x] = Color::kWhite;
+            crystalMatrix[y * width + x] = rand() % 50 + 10;
+        }
     }
 
 private:

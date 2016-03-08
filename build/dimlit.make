@@ -30,8 +30,8 @@ ifeq ($(config),debug)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -Werror -std=c++14 -Wall -Wextra -Wpedantic -Wno-unused-parameter
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += bin/Debug/libdimlit-lib.a bin/Debug/libanax.a -ltermbox
-  LDDEPS += bin/Debug/libdimlit-lib.a bin/Debug/libanax.a
+  LIBS += bin/Debug/libdimlit-lib.a -ltermbox
+  LDDEPS += bin/Debug/libdimlit-lib.a
   ALL_LDFLAGS += $(LDFLAGS) -L/usr/local/lib
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
@@ -65,8 +65,8 @@ ifeq ($(config),release)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++14
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += bin/Release/libdimlit-lib.a bin/Release/libanax.a -ltermbox
-  LDDEPS += bin/Release/libdimlit-lib.a bin/Release/libanax.a
+  LIBS += bin/Release/libdimlit-lib.a -ltermbox
+  LDDEPS += bin/Release/libdimlit-lib.a
   ALL_LDFLAGS += $(LDFLAGS) -L/usr/local/lib
   LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS

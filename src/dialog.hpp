@@ -13,13 +13,31 @@
 class Dialog
 {
 public:
-    typedef std::function<void(std::string)> Callback;
-    Dialog(int x, int y, int maxWidth, int maxHeight, const std::string &headline, const std::vector<std::string> &options, const Callback &cb) :
+    virtual ~Dialog() = default;
+
+    virtual void process(Action action) = 0;
+    virtual void draw() = 0;
+    bool shouldClose() const { return mShouldClose; }
+
+protected:
+    void close() { mShouldClose = true; }
+
+private:
+    bool mShouldClose = false;
+};
+
+template <typename T>
+class BasicDialog : public Dialog
+{
+public:
+    typedef std::pair<std::string, T> Option;
+    typedef std::function<void(std::string, const T &t)> Callback;
+    BasicDialog(int x, int y, int maxWidth, int maxHeight, const std::string &headline, const std::vector<Option> &options, const Callback &cb) :
         mX{x}, mY{y}, mMaxWidth{maxWidth}, mMaxHeight{maxHeight}, mHeadline{headline}, mOptions{options}, mCallback{cb}
     {
         mWidth = std::max_element(std::begin(mOptions), std::end(mOptions),
-            [](auto &a, auto &b) { return a.size() < b.size();
-        })->size();
+            [](auto &a, auto &b) { return a.first.size() < b.first.size();
+        })->first.size();
         mWidth = std::max(mWidth, static_cast<int>(mHeadline.size()));
         // +1 for headline.
         mHeight = 1 + mOptions.size();
@@ -36,15 +54,15 @@ public:
 
         // Resize all strings for easy printing.
         for (auto &option : mOptions) {
-            option.resize(mWidth, ' ');
+            option.first.resize(mWidth, ' ');
         }
     }
 
-    void process(Action action)
+    void process(Action action) override
     {
         switch (action) {
         case Action::kBack:
-            mShouldClose = true;
+            close();
             break;
         case Action::kMoveNorth:
             mSelected = std::max(mSelected - 1, 0);
@@ -53,12 +71,12 @@ public:
             mSelected = std::min(mSelected + 1, static_cast<int>(mOptions.size()) - 1);
             break;
         case Action::kMoveWest:
-            mShouldClose = true;
+            close();
             break;
         case Action::kMoveEast: case Action::kConfirm:
-            mShouldClose = true;
+            close();
             if (mSelected >= 0) {
-                mCallback(mOptions[mSelected]);
+                mCallback(mOptions[mSelected].first, mOptions[mSelected].second);
             }
             break;
         default:
@@ -66,7 +84,7 @@ public:
         }
     }
 
-    void draw()
+    void draw() override
     {
         int y = mY;
         tb_printf(mX, y++, TB_WHITE, TB_BLUE, mHeadline.c_str());
@@ -76,14 +94,11 @@ public:
             if (i == mSelected) {
                 std::swap(fg, bg);
             }
-            tb_printf(mX, y++, fg, bg, mOptions[i].c_str());
+            tb_printf(mX, y++, fg, bg, mOptions[i].first.c_str());
         }
     }
 
-    bool shouldClose() const { return mShouldClose; }
-
 private:
-    bool mShouldClose = false;
     int mSelected = -1;
     // Guidelines.
     int mX;
@@ -93,7 +108,7 @@ private:
     int mMaxWidth;
     int mMaxHeight;
     std::string mHeadline;
-    std::vector<std::string> mOptions;
+    std::vector<Option> mOptions;
     Callback mCallback;
 };
 

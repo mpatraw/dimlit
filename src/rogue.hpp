@@ -49,6 +49,11 @@ public:
         return mVisibility.brightness(x, y) > 0;
     }
 
+    void giveStructurePower(CrystallineStructure &cs, int amount)
+    {
+        cs.givePowerFromBag(mColoredCrystalBag, amount);
+    }
+
 private:
     int mX = 0;
     int mY = 0;

@@ -14,6 +14,7 @@ public:
 
     int width() const;
     int height() const;
+    bool inBounds(int x, int y) const;
     int brightness(int x, int y, Color color) const;
     int lightEmitted(int x, int y, Color color) const;
 

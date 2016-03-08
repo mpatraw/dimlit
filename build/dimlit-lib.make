@@ -24,10 +24,10 @@ ifeq ($(config),debug)
   TARGET = $(TARGETDIR)/libdimlit-lib.a
   OBJDIR = obj/Debug/dimlit-lib
   DEFINES += -DDEBUG
-  INCLUDES += -I/usr/local/include
+  INCLUDES += -I/usr/local/include -I../vendor/anax/include
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -Werror -std=c++14 -Wall -Wextra -Wpedantic
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -Werror -std=c++14 -Wall -Wextra -Wpedantic -Wno-unused-parameter
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS +=
@@ -59,7 +59,7 @@ ifeq ($(config),release)
   TARGET = $(TARGETDIR)/libdimlit-lib.a
   OBJDIR = obj/Release/dimlit-lib
   DEFINES += -DNDEBUG
-  INCLUDES += -I/usr/local/include
+  INCLUDES += -I/usr/local/include -I../vendor/anax/include
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++14
@@ -83,10 +83,9 @@ endif
 OBJECTS := \
 	$(OBJDIR)/colored_light_matrix.o \
 	$(OBJDIR)/crystalline_structure.o \
-	$(OBJDIR)/game_scene.o \
 	$(OBJDIR)/input.o \
 	$(OBJDIR)/light_matrix.o \
-	$(OBJDIR)/rogue.o \
+	$(OBJDIR)/world.o \
 
 RESOURCES := \
 
@@ -150,16 +149,13 @@ $(OBJDIR)/colored_light_matrix.o: ../src/colored_light_matrix.cpp
 $(OBJDIR)/crystalline_structure.o: ../src/crystalline_structure.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/game_scene.o: ../src/game_scene.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/input.o: ../src/input.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/light_matrix.o: ../src/light_matrix.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/rogue.o: ../src/rogue.cpp
+$(OBJDIR)/world.o: ../src/world.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

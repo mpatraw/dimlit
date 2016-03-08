@@ -2,9 +2,9 @@
 #include "crystalline_structure.hpp"
 
 CrystallineStructure::CrystallineStructure(
-    Color powers, int maxCrystals,
+    std::string name, Color powers, int maxCrystals,
     std::shared_ptr<CrystallineStructureEffect> effect)
-    : mPoweredBy{powers}, mMaxCrystals{maxCrystals}, mEffect{effect}
+    : mName{name}, mPoweredBy{powers}, mMaxCrystals{maxCrystals}, mEffect{effect}
 {
 }
 CrystallineStructure::~CrystallineStructure()
@@ -32,6 +32,11 @@ bool CrystallineStructure::fullPowered() const
 float CrystallineStructure::precentPowered() const
 {
     return static_cast<float>(mCrystals) / mMaxCrystals;
+}
+
+std::string CrystallineStructure::name() const
+{
+    return mName;
 }
 
 int CrystallineStructure::givePower(int amount)

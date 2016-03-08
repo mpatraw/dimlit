@@ -12,6 +12,13 @@ static int find_distance_of_intensity(int intensity)
     return std::floor(std::sqrt(intensity / 0.999999999f));
 }
 
+// Finds out how much intensity it takes to reach a distance.
+// I1 = I2 * D2^2 / D1^2, where I2 = 1, and D1 = 1.
+static int find_intensity_for_distance(int distance)
+{
+    return distance * distance;
+}
+
 // I2 = I1/(D2^2/D1^2)
 static int find_intensity_at_distance(int intensity, int distance)
 {
@@ -45,6 +52,11 @@ int LightMatrix::width() const
 int LightMatrix::height() const
 {
     return mHeight;
+}
+
+bool LightMatrix::inBounds(int x, int y) const
+{
+    return x >= 0 && x < width() && y >= 0 && y < height();
 }
 
 int LightMatrix::brightness(int x, int y) const
@@ -93,4 +105,9 @@ skip_removing_light:
     }
 
     mLightEmitted[y * mWidth + x] = amount;
+}
+
+void LightMatrix::emitEnough(int x, int y, int range)
+{
+    emitLight(x, y, find_intensity_for_distance(range));
 }

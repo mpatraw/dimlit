@@ -10,10 +10,12 @@ public:
 
     int width() const;
     int height() const;
+    bool inBounds(int x, int y) const;
     int brightness(int x, int y) const;
     int lightEmitted(int x, int y) const;
 
     void emitLight(int x, int y, int amount);
+    void emitEnough(int x, int y, int range);
 
 private:
     int mWidth;

@@ -18,20 +18,20 @@ public:
 class LightProvider : public CrystallineStructureEffect
 {
 public:
-    LightProvider(Color provides, std::shared_ptr<ColoredLightMatrix> lm)
+    LightProvider(Color provides, ColoredLightMatrix &lm)
         : mProvides{provides}, mColoredLightMatrix{lm}
     {
     }
     ~LightProvider() {}
 
-    void undo() { mColoredLightMatrix->emitLight(mX, mY, 0, mProvides); }
+    void undo() { mColoredLightMatrix.emitLight(mX, mY, 0, mProvides); }
 
     void apply(int x, int y, int power)
     {
         mX = x;
         mY = y;
         mPower = power;
-        mColoredLightMatrix->emitLight(mX, mY, mPower, mProvides);
+        mColoredLightMatrix.emitLight(mX, mY, mPower, mProvides);
     }
 
 private:
@@ -39,7 +39,7 @@ private:
     int mY = 0;
     int mPower = 0;
     Color mProvides;
-    std::shared_ptr<ColoredLightMatrix> mColoredLightMatrix;
+    ColoredLightMatrix &mColoredLightMatrix;
 };
 
 #endif

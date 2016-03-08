@@ -2,28 +2,15 @@
 #ifndef STATUS_BAR_HPP
 #define STATUS_BAR_HPP
 
-#include <memory>
 #include <sstream>
 
-#include <termbox.h>
-
 #include "rogue.hpp"
-
-static inline void tb_print(const char *str, int x, int y, uint16_t fg,
-                            uint16_t bg)
-{
-    while (*str) {
-        uint32_t uni;
-        str += tb_utf8_char_to_unicode(&uni, str);
-        tb_change_cell(x, y, uni, fg, bg);
-        x++;
-    }
-}
+#include "termbox.hpp"
 
 class StatusBar
 {
 public:
-    StatusBar(int y, int width, std::shared_ptr<const Rogue> rogue)
+    StatusBar(int y, int width, const Rogue &rogue)
         : mY{y}, mWidth{width}, mRogue{rogue}
     {
     }
@@ -36,7 +23,7 @@ public:
             tb_print(mMessage.c_str(), 0, mY, TB_WHITE, TB_BLACK);
             return;
         }
-        auto &bag = mRogue->bag();
+        auto &bag = mRogue.bag();
         auto x = mWidth - 1;
 
         auto drawNum = [&](int attr, int num) {
@@ -64,7 +51,7 @@ public:
 private:
     int mY;
     int mWidth;
-    std::shared_ptr<const Rogue> mRogue;
+    const Rogue &mRogue;
     std::string mMessage;
 };
 

@@ -13,7 +13,7 @@ workspace "dimlit"
 filter "configurations:Debug"
     defines {"DEBUG"}
     flags {"Symbols", "FatalWarnings"}
-    buildoptions {"-Wall", "-Wextra", "-Wpedantic"}
+    buildoptions {"-Wall", "-Wextra", "-Wpedantic", "-Wno-unused-parameter"}
 
 filter "configurations:Release"
     defines {"NDEBUG"}
@@ -23,14 +23,14 @@ project "dimlit-lib"
     kind "StaticLib"
     files {"../src/**.cpp"}
     removefiles "../src/main.cpp"
-    includedirs {"/usr/local/include"}
+    includedirs {"/usr/local/include", "../vendor/anax/include"}
 
 project "anax"
     prebuildcommands { "if [ ! -f ../vendor/anax/include/anax/Config.hpp ]; then cp AnaxConfig.hpp ../vendor/anax/include/anax/Config.hpp; fi" }
     kind "StaticLib"
     files {"../vendor/anax/src/anax/**.cpp"}
     includedirs {"../vendor/anax/include"}
-    buildoptions {"-Wno-unused-parameter", "-Wno-error=unused-variable", "-Wno-error=sign-compare"}
+    buildoptions {"-Wno-error=unused-variable", "-Wno-error=sign-compare"}
 
 
 project "dimlit"

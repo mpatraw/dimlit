@@ -5,6 +5,8 @@
 enum class Action {
     kNone,
     kQuit,
+    kBack,
+    kConfirm,
     kMoveNorth,
     kMoveSouth,
     kMoveEast,

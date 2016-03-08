@@ -27,7 +27,7 @@ ifeq ($(config),debug)
   INCLUDES += -I/usr/local/include -I../vendor/anax/include
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -Werror -std=c++14 -Wall -Wextra -Wpedantic
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -Werror -std=c++14 -Wall -Wextra -Wpedantic -Wno-unused-parameter
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS += bin/Debug/libdimlit-lib.a bin/Debug/libanax.a -ltermbox

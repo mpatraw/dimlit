@@ -9,10 +9,14 @@ Input::Input()
     mKeyBindings[TB_KEY_ARROW_DOWN] = Action::kMoveSouth;
     mKeyBindings[TB_KEY_ARROW_LEFT] = Action::kMoveWest;
     mKeyBindings[TB_KEY_ARROW_RIGHT] = Action::kMoveEast;
+    mKeyBindings[TB_KEY_ESC] = Action::kBack;
+    mKeyBindings[TB_KEY_ENTER] = Action::kConfirm;
+    mKeyBindings[TB_KEY_SPACE] = Action::kConfirm;
     mKeyBindings['k'] = Action::kMoveNorth;
     mKeyBindings['j'] = Action::kMoveSouth;
     mKeyBindings['h'] = Action::kMoveWest;
     mKeyBindings['l'] = Action::kMoveEast;
+    mKeyBindings['c'] = Action::kConfirm;
     mKeyBindings['Q'] = Action::kQuit;
 }
 

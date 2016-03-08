@@ -1,9 +1,8 @@
 
 #include <termbox.h>
 
-#include "game_scene.hpp"
 #include "input.hpp"
-#include "light_matrix.hpp"
+#include "world.hpp"
 
 // Guarantees proper shutdown.
 struct TermboxGuard {
@@ -15,7 +14,7 @@ int main()
 {
     TermboxGuard tg;
     Input input;
-    GameScene scene;
+    World world;
 
     tb_set_clear_attributes(TB_DEFAULT, TB_BLACK);
 
@@ -27,12 +26,12 @@ int main()
             running = false;
             break;
         default:
-            scene.process(action);
+            world.process(action);
             break;
         }
 
         tb_clear();
-        scene.draw();
+        world.draw();
         tb_present();
     }
 }

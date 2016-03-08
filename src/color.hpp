@@ -3,6 +3,7 @@
 #define COLOR_HPP
 
 enum class Color {
+    kNone,
     kBlack,
     kRed,
     kGreen,

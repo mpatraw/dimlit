@@ -2,6 +2,7 @@
 #ifndef COLORED_CRYSTAL_MATRIX_HPP
 #define COLORED_CRYSTAL_MATRIX_HPP
 
+#include <memory>
 #include <vector>
 
 #include "colored_crystal_bag.hpp"
@@ -10,8 +11,15 @@
 class ColoredCrystalMatrix
 {
 public:
-    ColoredCrystalMatrix(int width, int height) :
-        mWidth{width}, mHeight{height}
+    class Populator
+    {
+    public:
+        virtual ~Populator() = default;
+        virtual void populate(ColoredCrystalMatrix &crystalMatrix) = 0;
+    };
+    friend class Populator;
+    ColoredCrystalMatrix(int width, int height, Populator *populator)
+        : mWidth{width}, mHeight{height}, mPopulator{populator}
     {
         mColorMatrix.resize(mWidth * mHeight);
         mCrystalMatrix.resize(mWidth * mHeight);
@@ -44,11 +52,14 @@ public:
         mCrystalMatrix[y * mWidth + x] = 0;
     }
 
+    void step() { mPopulator->populate(*this); }
+
 private:
     int mWidth;
     int mHeight;
     std::vector<Color> mColorMatrix;
     std::vector<int> mCrystalMatrix;
+    std::unique_ptr<Populator> mPopulator;
 };
 
 #endif

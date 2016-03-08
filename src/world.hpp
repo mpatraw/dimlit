@@ -25,8 +25,8 @@ public:
     void process(Action action);
 
 private:
-    std::unique_ptr<ColoredCrystalMatrix> mColoredCrystalMatrix;
     std::unique_ptr<ColoredLightMatrix> mColoredLightMatrix;
+    std::unique_ptr<ColoredCrystalMatrix> mColoredCrystalMatrix;
     std::unique_ptr<Rogue> mTheRogue;
     std::unique_ptr<Creature> mTheCreature;
     std::vector<std::unique_ptr<CrystallineStructure>> mCrystallineStructures;

@@ -5,7 +5,7 @@
 #include <termbox.h>
 
 static inline int tb_print(const char *str, int x, int y, uint16_t fg,
-                            uint16_t bg)
+                           uint16_t bg)
 {
     const char *s = str;
     while (*s) {
@@ -17,7 +17,8 @@ static inline int tb_print(const char *str, int x, int y, uint16_t fg,
     return s - str;
 }
 
-static inline int tb_printf(int x, int y, uint16_t fg, uint16_t bg, const char *fmt, ...)
+static inline int tb_printf(int x, int y, uint16_t fg, uint16_t bg,
+                            const char *fmt, ...)
 {
     char buf[4096];
     va_list vl;

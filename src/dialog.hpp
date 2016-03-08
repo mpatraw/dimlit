@@ -26,18 +26,22 @@ private:
     bool mShouldClose = false;
 };
 
-template <typename T>
-class BasicDialog : public Dialog
+template <typename T> class BasicDialog : public Dialog
 {
 public:
     typedef std::pair<std::string, T> Option;
     typedef std::function<void(std::string, const T &t)> Callback;
-    BasicDialog(int x, int y, int maxWidth, int maxHeight, const std::string &headline, const std::vector<Option> &options, const Callback &cb) :
-        mX{x}, mY{y}, mMaxWidth{maxWidth}, mMaxHeight{maxHeight}, mHeadline{headline}, mOptions{options}, mCallback{cb}
+    BasicDialog(int x, int y, int maxWidth, int maxHeight,
+                const std::string &headline, const std::vector<Option> &options,
+                const Callback &cb)
+        : mX{x}, mY{y}, mMaxWidth{maxWidth}, mMaxHeight{maxHeight},
+          mHeadline{headline}, mOptions{options}, mCallback{cb}
     {
         mWidth = std::max_element(std::begin(mOptions), std::end(mOptions),
-            [](auto &a, auto &b) { return a.first.size() < b.first.size();
-        })->first.size();
+                                  [](auto &a, auto &b) {
+                                      return a.first.size() < b.first.size();
+                                  })
+                     ->first.size();
         mWidth = std::max(mWidth, static_cast<int>(mHeadline.size()));
         // +1 for headline.
         mHeight = 1 + mOptions.size();
@@ -68,15 +72,18 @@ public:
             mSelected = std::max(mSelected - 1, 0);
             break;
         case Action::kMoveSouth:
-            mSelected = std::min(mSelected + 1, static_cast<int>(mOptions.size()) - 1);
+            mSelected =
+                std::min(mSelected + 1, static_cast<int>(mOptions.size()) - 1);
             break;
         case Action::kMoveWest:
             close();
             break;
-        case Action::kMoveEast: case Action::kConfirm:
+        case Action::kMoveEast:
+        case Action::kConfirm:
             close();
             if (mSelected >= 0) {
-                mCallback(mOptions[mSelected].first, mOptions[mSelected].second);
+                mCallback(mOptions[mSelected].first,
+                          mOptions[mSelected].second);
             }
             break;
         default:

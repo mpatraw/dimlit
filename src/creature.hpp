@@ -9,8 +9,10 @@
 class Creature
 {
 public:
-    Creature(const Rogue &rogue, const ColoredLightMatrix &lm) : mRogue{rogue},
-        mColoredLightMatrix{lm}, mArea{lm.width(), lm.height()} {}
+    Creature(const Rogue &rogue, const ColoredLightMatrix &lm)
+        : mRogue{rogue}, mColoredLightMatrix{lm}, mArea{lm.width(), lm.height()}
+    {
+    }
 
     void step()
     {
@@ -19,6 +21,7 @@ public:
         (void)mColoredLightMatrix;
         mArea.emitRange(mX, mY, mSize);
     }
+
 private:
     int mX = 0;
     int mY = 0;

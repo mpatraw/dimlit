@@ -2,11 +2,11 @@
 #include "colored_light_matrix.hpp"
 
 ColoredLightMatrix::ColoredLightMatrix(int width, int height)
-    : mLightMatrices{{LightMatrix(width, height),
+    : mLightMatrices{{LightMatrix(width, height), LightMatrix(width, height),
                       LightMatrix(width, height), LightMatrix(width, height),
                       LightMatrix(width, height), LightMatrix(width, height),
                       LightMatrix(width, height), LightMatrix(width, height),
-                      LightMatrix(width, height), LightMatrix(width, height)}}
+                      LightMatrix(width, height)}}
 {
 }
 

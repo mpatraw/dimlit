@@ -14,13 +14,18 @@ class Rogue
 public:
     Rogue(const std::vector<std::unique_ptr<CrystallineStructure>> &cs,
           const ColoredLightMatrix &lm, ColoredCrystalMatrix &cm)
-        : mCrystallineStructures{cs}, mColoredLightMatrix{lm}, mColoredCrystalMatrix{cm},
-        mVisibility{lm.width(), lm.height()} {}
+        : mCrystallineStructures{cs}, mColoredLightMatrix{lm},
+          mColoredCrystalMatrix{cm}, mVisibility{lm.width(), lm.height()}
+    {
+    }
 
     int x() const { return mX; }
     int y() const { return mY; }
     const ColoredCrystalBag &bag() const { return mColoredCrystalBag; }
-    bool inLight() const { return mColoredLightMatrix.brightness(mX, mY, Color::kWhite) > 0; }
+    bool inLight() const
+    {
+        return mColoredLightMatrix.brightness(mX, mY, Color::kWhite) > 0;
+    }
 
     bool moveTo(int x, int y)
     {
@@ -42,7 +47,8 @@ public:
     }
     bool moveBy(int dx, int dy) { return moveTo(mX + dx, mY + dy); }
 
-    bool canSee(int x, int y) {
+    bool canSee(int x, int y)
+    {
         if (mColoredLightMatrix.brightness(x, y, Color::kWhite) > 0) {
             return true;
         }
@@ -58,7 +64,8 @@ private:
     int mX = 0;
     int mY = 0;
     int mSightRange = 2;
-    const std::vector<std::unique_ptr<CrystallineStructure>> &mCrystallineStructures;
+    const std::vector<std::unique_ptr<CrystallineStructure>>
+        &mCrystallineStructures;
     const ColoredLightMatrix &mColoredLightMatrix;
     ColoredCrystalMatrix &mColoredCrystalMatrix;
     LightMatrix mVisibility;

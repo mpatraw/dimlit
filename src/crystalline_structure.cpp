@@ -4,7 +4,8 @@
 CrystallineStructure::CrystallineStructure(
     std::string name, Color powers, int maxCrystals,
     std::shared_ptr<CrystallineStructureEffect> effect)
-    : mMaxCrystals{maxCrystals}, mPoweredBy{powers}, mName{name}, mEffect{effect}
+    : mMaxCrystals{maxCrystals}, mPoweredBy{powers}, mName{name},
+      mEffect{effect}
 {
 }
 CrystallineStructure::~CrystallineStructure()

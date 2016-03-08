@@ -2,17 +2,23 @@
 
 #include <termbox.h>
 
+#include "basic_crystal_populator.hpp"
 #include "world.hpp"
 
 World::World()
-    : mColoredCrystalMatrix{new ColoredCrystalMatrix(kWorldWidth, kWorldHeight)},
-      mColoredLightMatrix{new ColoredLightMatrix(kWorldWidth, kWorldHeight)},
-      mTheRogue{new Rogue(mCrystallineStructures, *mColoredLightMatrix, *mColoredCrystalMatrix)},
-      mTheCreature{new Creature(*mTheRogue, *mColoredLightMatrix)}, mStatusBar{23, kWorldWidth, *mTheRogue}
+    : mColoredLightMatrix{new ColoredLightMatrix(kWorldWidth, kWorldHeight)},
+      mColoredCrystalMatrix{new ColoredCrystalMatrix(
+          kWorldWidth, kWorldHeight,
+          new BasicCrystalPopulator(*mColoredLightMatrix))},
+      mTheRogue{new Rogue(mCrystallineStructures, *mColoredLightMatrix,
+                          *mColoredCrystalMatrix)},
+      mTheCreature{new Creature(*mTheRogue, *mColoredLightMatrix)},
+      mStatusBar{23, kWorldWidth, *mTheRogue}
 {
     auto eff =
         std::make_shared<LightProvider>(Color::kWhite, *mColoredLightMatrix);
-    auto cs = std::make_unique<CrystallineStructure>("Light Structure", Color::kWhite, 100, eff);
+    auto cs = std::make_unique<CrystallineStructure>("Light Structure",
+                                                     Color::kWhite, 100, eff);
 
     cs->givePower(50);
     cs->moveTo(40, 12);
@@ -32,11 +38,16 @@ void World::draw()
 {
     for (int x = 0; x < kWorldWidth; ++x) {
         for (int y = 0; y < kWorldHeight; ++y) {
-            auto bg = mColoredLightMatrix->brightness(x, y, Color::kWhite) ?
-                    TB_WHITE : TB_BLACK;
+            auto bg = mColoredLightMatrix->brightness(x, y, Color::kWhite)
+                          ? TB_WHITE
+                          : TB_BLACK;
             auto fg = mColoredCrystalMatrix->color(x, y);
-            auto ch = mColoredCrystalMatrix->crystals(x, y) && mTheRogue->canSee(x, y) ? '*' : ' ';
-            tb_change_cell(x, y, ch, static_cast<int>(fg) | TB_BOLD, static_cast<int>(bg));
+            auto ch =
+                mColoredCrystalMatrix->crystals(x, y) && mTheRogue->canSee(x, y)
+                    ? '*'
+                    : ' ';
+            tb_change_cell(x, y, ch, static_cast<int>(fg) | TB_BOLD,
+                           static_cast<int>(bg));
         }
     }
 
@@ -105,15 +116,15 @@ void World::process(Action action)
         int y = mTheRogue->y() + dY;
         auto b = std::begin(mCrystallineStructures);
         auto e = std::end(mCrystallineStructures);
-        auto csi = std::find_if(b, e, [x, y](auto &i) {
-            return i->x() == x && i->y() == y;
-        });
+        auto csi = std::find_if(
+            b, e, [x, y](auto &i) { return i->x() == x && i->y() == y; });
         if (csi != e) {
             auto &cs = *csi;
             int currentCrystals = cs->crystals();
             int maxCrystals = cs->maxCrystals();
             int maxNeeded = maxCrystals - currentCrystals;
-            maxNeeded = std::min(maxNeeded, mTheRogue->bag().crystals(cs->poweredBy()));
+            maxNeeded =
+                std::min(maxNeeded, mTheRogue->bag().crystals(cs->poweredBy()));
             std::vector<BasicDialog<int>::Option> options;
             for (int i = 4; i < maxNeeded; i *= 5) {
                 std::stringstream ss;
@@ -124,10 +135,14 @@ void World::process(Action action)
             maxss << "Give " << maxNeeded;
             options.push_back(BasicDialog<int>::Option(maxss.str(), maxNeeded));
             std::stringstream ss;
-            ss << cs->name() << " (" << currentCrystals << "/" << maxCrystals << ")";
-            mDialog.reset(new BasicDialog<int>(x, y, kWorldWidth, kWorldHeight,
-                ss.str(), options, [&cs, this](auto const &option, auto item) mutable {
-                    this->mTheRogue->giveStructurePower(*cs, item);
+            ss << cs->name() << " (" << currentCrystals << "/" << maxCrystals
+               << ")";
+            mDialog.reset(new BasicDialog<int>(
+                x, y, kWorldWidth, kWorldHeight, ss.str(), options,
+                [&cs, this](auto const &option, auto item) mutable {
+                    // FIXME: Right now adds one to compensate for the step.
+                    this->mTheRogue->giveStructurePower(*cs, item + 1);
+                    cs->step();
                 }));
         }
     }

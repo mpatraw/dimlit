@@ -57,7 +57,7 @@ public:
 
     void giveStructurePower(CrystallineStructure &cs, int amount)
     {
-        cs.givePowerFromBag(mColoredCrystalBag, amount);
+        cs.powerSource().giveCrystalsFromBag(mColoredCrystalBag, amount);
     }
 
 private:

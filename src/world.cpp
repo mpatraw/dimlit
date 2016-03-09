@@ -15,12 +15,14 @@ World::World()
       mTheCreature{new Creature(*mTheRogue, *mColoredLightMatrix)},
       mStatusBar{23, kWorldWidth, *mTheRogue}
 {
+    PowerSource ps(Color::kWhite, 100);
+    ps.givePower(50);
+    ps.chargeToFull();
     auto eff =
         std::make_shared<LightProvider>(Color::kWhite, *mColoredLightMatrix);
     auto cs = std::make_unique<CrystallineStructure>("Light Structure",
-                                                     Color::kWhite, 100, eff);
+                                                     ps, eff);
 
-    cs->givePower(50);
     cs->moveTo(40, 12);
     mCrystallineStructures.push_back(std::move(cs));
     mTheRogue->moveTo(40, 13);
@@ -32,6 +34,9 @@ void World::step()
     for (auto &cs : mCrystallineStructures) {
         cs->step();
     }
+    mColoredCrystalMatrix->step();
+    mTheCreature->step();
+    mStatusBar.step();
 }
 
 void World::draw()
@@ -62,7 +67,7 @@ void World::draw()
     for (auto &cs : mCrystallineStructures) {
         auto &cell = tb_cell_buffer()[cs->y() * tb_width() + cs->x()];
         // XXX: Uses a hack. Termbox colors the same as dimlit's.
-        int color = static_cast<int>(cs->poweredBy());
+        int color = static_cast<int>(cs->powerSource().poweredBy());
         cell.ch = '&';
         cell.fg = TB_BOLD | color;
     }
@@ -100,6 +105,9 @@ void World::process(Action action)
     case Action::kMoveWest:
         dX = -1;
         break;
+    case Action::kBack:
+        mStatusBar.setMessage("");
+        break;
     default:
         break;
     }
@@ -120,29 +128,26 @@ void World::process(Action action)
             b, e, [x, y](auto &i) { return i->x() == x && i->y() == y; });
         if (csi != e) {
             auto &cs = *csi;
-            int currentCrystals = cs->crystals();
-            int maxCrystals = cs->maxCrystals();
-            int maxNeeded = maxCrystals - currentCrystals;
-            maxNeeded =
-                std::min(maxNeeded, mTheRogue->bag().crystals(cs->poweredBy()));
+            auto &ps = cs->powerSource();
+            int max = ps.maxCrystalsFromBag(mTheRogue->bag());
             std::vector<BasicDialog<int>::Option> options;
-            for (int i = 4; i < maxNeeded; i *= 5) {
+            for (int i = 2; i < max; i *= 2) {
                 std::stringstream ss;
                 ss << "Give " << i;
                 options.push_back(BasicDialog<int>::Option(ss.str(), i));
             }
             std::stringstream maxss;
-            maxss << "Give " << maxNeeded;
-            options.push_back(BasicDialog<int>::Option(maxss.str(), maxNeeded));
+            maxss << "Give " << max;
+            options.push_back(BasicDialog<int>::Option(maxss.str(), max));
             std::stringstream ss;
-            ss << cs->name() << " (" << currentCrystals << "/" << maxCrystals
+            ss << cs->name() << " (" << ps.percentPowered() << "% of " << ps.maxCrystals()
                << ")";
             mDialog.reset(new BasicDialog<int>(
                 x, y, kWorldWidth, kWorldHeight, ss.str(), options,
                 [&cs, this](auto const &option, auto item) mutable {
+                    this->mTheRogue->giveStructurePower(*cs, item);
                     // FIXME: Right now adds one to compensate for the step.
-                    this->mTheRogue->giveStructurePower(*cs, item + 1);
-                    cs->step();
+                    cs->refresh();
                 }));
         }
     }

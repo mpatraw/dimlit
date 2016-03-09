@@ -94,14 +94,14 @@ public:
     void draw() override
     {
         int y = mY;
-        tb_printf(mX, y++, TB_WHITE, TB_BLUE, mHeadline.c_str());
+        tb_print(mHeadline.c_str(), mX, y++, TB_WHITE, TB_BLACK);
         for (int i = 0; i < static_cast<int>(mOptions.size()); ++i) {
             int fg = TB_WHITE;
-            int bg = TB_BLUE;
+            int bg = TB_BLACK;
             if (i == mSelected) {
                 std::swap(fg, bg);
             }
-            tb_printf(mX, y++, fg, bg, mOptions[i].first.c_str());
+            tb_print(mOptions[i].first.c_str(), mX, y++, fg, bg);
         }
     }
 

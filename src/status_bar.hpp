@@ -15,12 +15,16 @@ public:
     {
     }
 
-    void setMessage(std::string msg) { mMessage = msg; }
+    void setMessage(std::string msg) {
+        mMessage = msg;
+        mMessageTimer = 3;
+    }
 
     void draw() const
     {
         if (mMessage != "") {
-            tb_print(mMessage.c_str(), 0, mY, TB_WHITE, TB_BLACK);
+            auto fg = TB_WHITE | (mMessageTimer >= 3 ? TB_BOLD : 0);
+            tb_print(mMessage.c_str(), 0, mY, fg, TB_BLACK);
             return;
         }
         auto &bag = mRogue.bag();
@@ -48,9 +52,17 @@ public:
         drawNum(TB_WHITE, bag.crystals(Color::kWhite));
     }
 
+    void step()
+    {
+        if (--mMessageTimer <= 0) {
+            mMessage = "";
+        }
+    }
+
 private:
     int mY;
     int mWidth;
+    int mMessageTimer = 0;
     const Rogue &mRogue;
     std::string mMessage;
 };

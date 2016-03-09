@@ -82,6 +82,7 @@ endif
 
 OBJECTS := \
 	$(OBJDIR)/colored_light_matrix.o \
+	$(OBJDIR)/creature_state.o \
 	$(OBJDIR)/crystalline_structure.o \
 	$(OBJDIR)/input.o \
 	$(OBJDIR)/light_matrix.o \
@@ -144,6 +145,9 @@ $(GCH): $(PCH)
 endif
 
 $(OBJDIR)/colored_light_matrix.o: ../src/colored_light_matrix.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/creature_state.o: ../src/creature_state.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/crystalline_structure.o: ../src/crystalline_structure.cpp

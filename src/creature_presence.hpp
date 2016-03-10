@@ -3,6 +3,7 @@
 #define CREATURE_PRESENCE_HPP
 
 #include "colored_light_matrix.hpp"
+#include "rogue.hpp"
 
 class CreaturePresence
 {
@@ -10,13 +11,18 @@ public:
     enum class Death { kStarved, kLit };
     enum class Injury { kLit };
     enum class Danger { kSafe, kClose, kReallyClose, kFatal };
-    enum class Reaction { kNothing, kSqueel, kDeath };
-    CreaturePresence(const ColoredLightMatrix &lm) :
-        mColoredLightMatrix{lm} {}
+    CreaturePresence(const Rogue &rogue, const ColoredLightMatrix &lm)
+        : mRogue{rogue}, mColoredLightMatrix{lm}
+    {
+        (void)mRogue;
+        (void)mColoredLightMatrix;
+    }
 
     bool alive() const { return mAlive; }
-    bool starving() const { return alive() && mSustenance <= mStarvingThreshold; }
-    int percentHealth() const { return (mHealth * 100) / mMaxHealth; }
+    bool starving() const
+    {
+        return alive() && mSustenance <= mStarvingThreshold;
+    }
     Death causeOfDeath() const { return mCauseOfDeath; }
 
     void setGracePeriod(int turns) { mGracePeriod = turns; }
@@ -45,7 +51,7 @@ public:
         }
     }
 
-    void age(int by=1)
+    void age(int by = 1)
     {
         mSustenance = std::max(mSustenance - by, 0);
         if (mSustenance <= 0) {
@@ -62,28 +68,24 @@ public:
         return danger;
     }
 
-    Reaction checkLight()
-    {
-        return Reaction::kNothing;
-    }
-
     void moveTowards(int x, int y)
     {
-        (void)mColoredLightMatrix;
+        (void)x;
+        (void)y;
     }
+
 private:
     int mCenterX = 0;
     int mCenterY = 0;
     // The creature can move anywhere in this circle.
     int mInnerRange = 2;
     int mOuterRange = 6;
-    int mHealth = 100;
-    int mMaxHealth = 100;
     int mGracePeriod = 0;
     bool mAlive = true;
     int mSustenance = 10000;
     int mStarvingThreshold = 1000;
     Death mCauseOfDeath;
+    const Rogue &mRogue;
     const ColoredLightMatrix &mColoredLightMatrix;
 };
 

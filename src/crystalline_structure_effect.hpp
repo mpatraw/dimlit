@@ -2,6 +2,8 @@
 #ifndef CRYSTALLINE_STRUCTURE_EFFECT_HPP
 #define CRYSTALLINE_STRUCTURE_EFFECT_HPP
 
+#include "colored_light_matrix.hpp"
+
 class CrystallineStructureEffect
 {
 public:

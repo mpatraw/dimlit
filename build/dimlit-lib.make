@@ -24,10 +24,10 @@ ifeq ($(config),debug)
   TARGET = $(TARGETDIR)/libdimlit-lib.a
   OBJDIR = obj/Debug/dimlit-lib
   DEFINES += -DDEBUG
-  INCLUDES += -I/usr/local/include -I../vendor/anax/include
+  INCLUDES += -I/usr/local/include
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -Werror -std=c++14 -Wall -Wextra -Wpedantic -Wno-unused-parameter
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -Werror -std=c++14 -Wall -Wextra -Wpedantic
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS +=
@@ -59,7 +59,7 @@ ifeq ($(config),release)
   TARGET = $(TARGETDIR)/libdimlit-lib.a
   OBJDIR = obj/Release/dimlit-lib
   DEFINES += -DNDEBUG
-  INCLUDES += -I/usr/local/include -I../vendor/anax/include
+  INCLUDES += -I/usr/local/include
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -O2 -std=c++14

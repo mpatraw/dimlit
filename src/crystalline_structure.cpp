@@ -1,9 +1,9 @@
 
 #include "crystalline_structure.hpp"
 
-CrystallineStructure::CrystallineStructure(
-    std::string name, const PowerSource &powerSource,
-    std::shared_ptr<CrystallineStructureEffect> effect)
+CrystallineStructure::CrystallineStructure(std::string name,
+                                           const PowerSource &powerSource,
+                                           CrystallineStructureEffect *effect)
     : mName{name}, mEffect{effect}, mPowerSource{powerSource}
 {
 }

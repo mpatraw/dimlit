@@ -28,19 +28,17 @@ public:
     int width() const { return mWidth; }
     int height() const { return mHeight; }
 
-    int totalCrystals(Color color) const {
+    int totalCrystals(Color color) const
+    {
         return mCrystalCount[static_cast<int>(color)];
     }
 
-    int totalCrystals() const {
-        return totalCrystals(Color::kBlack) +
-               totalCrystals(Color::kRed) +
-               totalCrystals(Color::kGreen) +
-               totalCrystals(Color::kYellow) +
-               totalCrystals(Color::kBlue) +
-               totalCrystals(Color::kMagenta) +
-               totalCrystals(Color::kCyan) +
-               totalCrystals(Color::kWhite);
+    int totalCrystals() const
+    {
+        return totalCrystals(Color::kBlack) + totalCrystals(Color::kRed) +
+               totalCrystals(Color::kGreen) + totalCrystals(Color::kYellow) +
+               totalCrystals(Color::kBlue) + totalCrystals(Color::kMagenta) +
+               totalCrystals(Color::kCyan) + totalCrystals(Color::kWhite);
     }
 
     int crystals(int x, int y) const

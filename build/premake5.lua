@@ -13,7 +13,7 @@ workspace "dimlit"
 filter "configurations:Debug"
     defines {"DEBUG"}
     flags {"Symbols", "FatalWarnings"}
-    buildoptions {"-Wall", "-Wextra", "-Wpedantic", "-Wno-unused-parameter"}
+    buildoptions {"-Wall", "-Wextra", "-Wpedantic"}
 
 filter "configurations:Release"
     defines {"NDEBUG"}
@@ -23,12 +23,12 @@ project "dimlit-lib"
     kind "StaticLib"
     files {"../src/**.cpp"}
     removefiles "../src/main.cpp"
-    includedirs {"/usr/local/include", "../vendor/anax/include"}
+    includedirs {"/usr/local/include"}
 
 project "dimlit"
     kind "ConsoleApp"
     files "../src/main.cpp"
-    includedirs {"/usr/local/include", "../vendor/anax/include"}
+    includedirs {"/usr/local/include"}
     libdirs {"/usr/local/lib"}
     links {"dimlit-lib", "termbox"}
     targetdir "../bin"

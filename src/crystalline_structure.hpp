@@ -6,7 +6,6 @@
 #include <string>
 
 #include "colored_crystal_bag.hpp"
-#include "colored_light_matrix.hpp"
 #include "crystalline_structure_effect.hpp"
 #include "power_source.hpp"
 
@@ -14,7 +13,7 @@ class CrystallineStructure
 {
 public:
     CrystallineStructure(std::string name, const PowerSource &powerSource,
-                         std::shared_ptr<CrystallineStructureEffect> effect);
+                         CrystallineStructureEffect *effect);
     ~CrystallineStructure();
 
     int x() const;
@@ -31,7 +30,7 @@ private:
     int mX = 0;
     int mY = 0;
     std::string mName;
-    std::shared_ptr<CrystallineStructureEffect> mEffect;
+    std::unique_ptr<CrystallineStructureEffect> mEffect;
     PowerSource mPowerSource;
 };
 

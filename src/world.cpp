@@ -18,10 +18,9 @@ World::World()
     PowerSource ps(Color::kWhite, 100);
     ps.givePower(50);
     ps.chargeToFull();
-    auto eff =
-        std::make_shared<LightProvider>(Color::kWhite, *mColoredLightMatrix);
-    auto cs = std::make_unique<CrystallineStructure>("Light Structure",
-                                                     ps, eff);
+    auto eff = new LightProvider(Color::kWhite, *mColoredLightMatrix);
+    auto cs =
+        std::make_unique<CrystallineStructure>("Light Structure", ps, eff);
 
     cs->moveTo(40, 12);
     mCrystallineStructures.push_back(std::move(cs));
@@ -140,11 +139,12 @@ void World::process(Action action)
             maxss << "Give " << max;
             options.push_back(BasicDialog<int>::Option(maxss.str(), max));
             std::stringstream ss;
-            ss << cs->name() << " (" << ps.percentPowered() << "% of " << ps.maxCrystals()
-               << ")";
+            ss << cs->name() << " (" << ps.percentPowered() << "% of "
+               << ps.maxCrystals() << ")";
             mDialog.reset(new BasicDialog<int>(
                 x, y, kWorldWidth, kWorldHeight, ss.str(), options,
                 [&cs, this](auto const &option, auto item) mutable {
+                    (void)option;
                     this->mTheRogue->giveStructurePower(*cs, item);
                     // FIXME: Right now adds one to compensate for the step.
                     cs->refresh();

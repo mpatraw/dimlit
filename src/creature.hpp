@@ -21,34 +21,26 @@ public:
 
         virtual void creatureDied(std::string reason) = 0;
         virtual void creatureInjured(std::string reason) = 0;
-        virtual void creatureClose(bool reallyClose=false) = 0;
+        virtual void creatureClose(bool reallyClose = false) = 0;
     };
 
     Creature(const Rogue &rogue, const ColoredLightMatrix &lm)
-        : mPresence{lm}, mRogue{rogue}, mColoredLightMatrix{lm}
+        : mPresence{rogue, lm}
     {
-        mState.reset(new CreatureWandering(*this, mColoredLightMatrix));
-        (void)mRogue;
+        mState.reset(new CreatureWandering(*this, mPresence));
     }
     const CreaturePresence &presence() const { return mPresence; }
 
-    void setState(CreatureState *state)
-    {
-        mState.reset(state);
-    }
+    void setState(CreatureState *state) { mState.reset(state); }
 
-    void addListener(Listener &listener)
-    {
-        mListeners.push_back(listener);
-    }
+    void addListener(Listener &listener) { mListeners.push_back(listener); }
 
     void removeListener(Listener &listener)
     {
         auto b = std::begin(mListeners);
         auto e = std::end(mListeners);
-        auto it = std::find_if(b, e, [&listener](auto const &l) {
-            return &listener == &l.get();
-        });
+        auto it = std::find_if(
+            b, e, [&listener](auto const &l) { return &listener == &l.get(); });
         if (it != e) {
             mListeners.erase(it);
         }
@@ -69,19 +61,15 @@ public:
 private:
     void notifyCreatureDied(CreaturePresence::Death how)
     {
-        std::string howStrings[] = {
-            "The Creature starved to death.",
-            "The Creature disintigrated in the light."
-        };
+        std::string howStrings[] = {"The Creature starved to death.",
+                                    "The Creature disintigrated in the light."};
         for (auto l : mListeners) {
             l.get().creatureDied(howStrings[static_cast<int>(how)]);
         }
     }
     void notifyCreatureInjured(CreaturePresence::Injury how)
     {
-        std::string howStrings[] = {
-            "The Creature squeeled in the light."
-        };
+        std::string howStrings[] = {"The Creature squeeled in the light."};
         for (auto l : mListeners) {
             l.get().creatureInjured(howStrings[static_cast<int>(how)]);
         }
@@ -96,8 +84,6 @@ private:
     std::vector<std::reference_wrapper<Listener>> mListeners;
     std::unique_ptr<CreatureState> mState;
     CreaturePresence mPresence;
-    const Rogue &mRogue;
-    const ColoredLightMatrix &mColoredLightMatrix;
 };
 
 #endif

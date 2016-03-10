@@ -8,12 +8,12 @@
 class PowerSource
 {
 public:
-    PowerSource(Color power, double maxPower, double charge=1,
-        double consumptionRate=1, double powerPerCrystal=1) :
-        mMaxPower{maxPower}, mChargeRate{charge}, mConsumptionRate{consumptionRate},
-        mPowerPerCrystal{powerPerCrystal}, mPoweredBy{power}
+    PowerSource(Color power, double maxPower, double charge = 1,
+                double consumptionRate = 1, double powerPerCrystal = 1)
+        : mMaxPower{maxPower}, mChargeRate{charge},
+          mConsumptionRate{consumptionRate}, mPowerPerCrystal{powerPerCrystal},
+          mPoweredBy{power}
     {
-
     }
 
     Color poweredBy() const { return mPoweredBy; }
@@ -27,15 +27,16 @@ public:
         Color color = poweredBy();
         // Can't add more than what the structure can handler or what's in the
         // bag. Our maximum is a whatever is our lowest limit.
-        int maxNeeded = std::min(bag.crystals(color),
-            static_cast<int>((mMaxPower - mPower) / mPowerPerCrystal));
+        int maxNeeded =
+            std::min(bag.crystals(color),
+                     static_cast<int>((mMaxPower - mPower) / mPowerPerCrystal));
         return maxNeeded;
     }
 
     int giveCrystals(int amount)
     {
-        int crystalAmount = std::min(amount,
-            static_cast<int>((mMaxPower - mPower) / mPowerPerCrystal));
+        int crystalAmount = std::min(
+            amount, static_cast<int>((mMaxPower - mPower) / mPowerPerCrystal));
         mPower += crystalAmount * mPowerPerCrystal;
         return crystalAmount;
     }
@@ -54,16 +55,11 @@ public:
         mPower = std::min(mPower + amount, mMaxPower);
     }
 
-    void chargeToFull()
-    {
-        mCurrentPower = mPower;
-    }
+    void chargeToFull() { mCurrentPower = mPower; }
 
     void step()
     {
-        if (mCurrentPower == mPower) {
-            mPower = std::max(mPower - mConsumptionRate, 0.0);
-        }
+        mPower = std::max(mPower - mConsumptionRate, 0.0);
         mCurrentPower = std::min(mCurrentPower + mChargeRate, mPower);
     }
 

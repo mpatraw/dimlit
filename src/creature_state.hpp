@@ -3,6 +3,7 @@
 #define CREATURE_STATE_HPP
 
 #include "colored_light_matrix.hpp"
+#include "creature_presence.hpp"
 
 class Creature;
 
@@ -13,6 +14,7 @@ public:
     virtual ~CreatureState() = default;
 
     virtual void step() = 0;
+
 protected:
     Creature &mCreature;
 };
@@ -20,23 +22,23 @@ protected:
 class CreatureWandering : public CreatureState
 {
 public:
-    CreatureWandering(Creature &creature, const ColoredLightMatrix &lm);
+    CreatureWandering(Creature &creature, CreaturePresence &cp);
 
     void step() override;
 
 private:
-    const ColoredLightMatrix &mColoredLightMatrix;
+    CreaturePresence &mPresence;
 };
 
 class CreatureTeleporting : public CreatureState
 {
 public:
-    CreatureTeleporting(Creature &creature, const ColoredLightMatrix &lm);
+    CreatureTeleporting(Creature &creature, CreaturePresence &cp);
 
     void step() override;
 
 private:
-    const ColoredLightMatrix &mColoredLightMatrix;
+    CreaturePresence &mPresence;
 };
 
 #endif

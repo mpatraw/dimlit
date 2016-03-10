@@ -15,7 +15,8 @@ public:
     {
     }
 
-    void setMessage(std::string msg) {
+    void setMessage(std::string msg)
+    {
         mMessage = msg;
         mMessageTimer = 3;
     }
